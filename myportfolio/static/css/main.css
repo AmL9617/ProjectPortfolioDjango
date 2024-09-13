@@ -1,0 +1,30 @@
+body {
+    background-color: #e3ebf1;
+  }
+
+.portfolio-card {
+  background-color: #7b8a9b;
+  height: auto;
+  color: white;
+  padding: 12%;
+  margin: 5%;
+  width: auto;
+}
+
+.night-mode {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.portfolio-section {
+  padding: 50px;
+}
+
+.night-toggle {
+  background-color: #3b5166;
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 8px;
+}
