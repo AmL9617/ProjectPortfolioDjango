@@ -4,11 +4,11 @@ body {
 
 .portfolio-card {
   background-color: #7b8a9b;
-  height: auto;
+  height: 50vh;
   color: white;
   padding: 12%;
   margin: 5%;
-  width: auto;
+  width: 55vh;
 }
 
 .night-mode {
