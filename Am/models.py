@@ -59,11 +59,11 @@ class Skills(models.Model):
 
     
 
-# PORTFOLIO SECTION
+# PROJECT SECTION
 
-class Portfolio(models.Model):
-    image = models.ImageField(upload_to='portfolio/')
+class Project(models.Model):
+    image = models.ImageField(upload_to='project/')
     link = models.URLField(max_length=200)
 
     def __str__(self):
-        return f'Portfolio {self.id}'
+        return f'Project {self.id}'
