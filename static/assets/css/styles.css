@@ -274,22 +274,22 @@ img{
     border-radius: .5rem;
 }
 
-/* ===== PORTFOLIO =====*/
-.portfolio{
+/* ===== PROJECTS =====*/
+.project{
     background-color: var(--white-color);
 }
-.portfolio__container{
+.project__container{
     justify-items: center;
     row-gap: 2rem;
 }
-.portfolio__img{
+.project__img{
     position: relative;
     overflow: hidden;
 }
-.portfolio__img img{
+.project__img img{
     border-radius: .5rem;
 }
-.portfolio__link{
+.project__link{
     position: absolute;
     bottom: -100%;
     width: 100%;
@@ -303,10 +303,10 @@ img{
     backdrop-filter: blur(10px);
     transition: .3s;
 }
-.portfolio__img:hover .portfolio__link{
+.project__img:hover .project__link{
     bottom: 0;
 }
-.portfolio__link-name{
+.project__link-name{
     color: var(--dark-color);
 }
 
@@ -450,7 +450,7 @@ img{
         align-items: center;
     }
 
-    .portfolio__container{
+    .project__container{
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(2, 1fr);
         column-gap: 2rem;

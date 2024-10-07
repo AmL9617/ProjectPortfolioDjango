@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Home, About, Profile, Category, Skills, Portfolio
+from .models import Home, About, Profile, Category, Skills, Project
 
 
 # Home
@@ -31,5 +31,5 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
 
 
-# Portfolio
-admin.site.register(Portfolio)
+# Projects
+admin.site.register(Project)
