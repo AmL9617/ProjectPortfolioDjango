@@ -163,6 +163,17 @@ img{
     font-size: 1.5rem;
     cursor: pointer;
 }
+#btn-theme{
+    margin-left: 2rem;
+    background-color: var(--back-color);
+    color: var(--dark-color);
+    border-radius: 80%;
+    border: none;
+}
+#btn-theme:hover{
+    background-color: var(--accent-color);
+    color: var(--back-color);
+}
 
 /*=== Show menu ===*/
 .show{

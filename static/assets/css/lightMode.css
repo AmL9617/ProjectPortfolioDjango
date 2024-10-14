@@ -10,6 +10,7 @@
 /*===== Colores =====*/
 :root{
     --first-color: #4a749e;
+    --accent-color: #0782f5;
     --back-color: #e7eaec;
     --dark-color: #2A3B47;
     --text-color: #575050;
@@ -158,6 +159,18 @@ img{
     color: var(--back-color);
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+#btn-theme{
+    margin-left: 2rem;
+    background-color: var(--back-color);
+    color: var(--dark-color);
+    border-radius: 80%;
+    border: none;
+}
+#btn-theme:hover{
+    background-color: var(--accent-color);
+    color: var(--back-color);
 }
 
 /*=== Show menu ===*/

@@ -23,19 +23,16 @@ class About(models.Model):
     heading = models.CharField(max_length=50)
     career = models.CharField(max_length=20)
     description = models.TextField(blank=False)
-    profile_img = models.ImageField(upload_to='profile/')
-    
+    profile_img = models.ImageField(upload_to='profile/')    
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.career
 
-
 class Profile(models.Model):
     about = models.ForeignKey(About,
                                 on_delete=models.CASCADE)
-    social_name = models.CharField(max_length=10)
-    link = models.URLField(max_length=200)
+
 
 
 
@@ -76,10 +73,3 @@ class Setting(models.Model):
 
 	def __str__(self):
 		return self.name
-     
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    theme = models.CharField(max_length=20, default='lightMode.css')  # Default theme
-
-
