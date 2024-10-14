@@ -6,12 +6,91 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- ===== CSS ===== -->
-        <link id="mycss" rel="stylesheet" href="{% static 'assets/css/lightMode.css' %}">
+        <link id="mycss" rel="stylesheet" href="{% static 'assets/css/' %"}{{theme}}>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
 
         <!-- ===== BOX ICONS ===== -->
         <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+        <script>
+// Fetch CSRF token (assuming the function remains unchanged)
+var csrftoken = getCookie('csrftoken');
+    var cssFile = "{% static 'assets/css/' %}";  // Path to your CSS directory with a trailing slash
+
+    // Function to get cookies (remains the same)
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Function to switch the theme
+    function swapTheme(theme) {
+        var themePath = cssFile + theme;
+        console.log("Swapping theme to: " + themePath);  // Debugging log
+
+        // Update the CSS file reference
+        document.getElementById('mycss').setAttribute('href', themePath);
+
+        // Save the theme choice to localStorage
+        localStorage.setItem('theme', theme);
+    }
+
+    // Function to update the theme on the server
+    function updateTheme(theme) {
+        fetch('/update_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ theme: theme })
+        });
+    }
+
+    // Load theme based on user's preference or system's preference
+    function loadTheme() {
+        var storedTheme = localStorage.getItem('theme');
+
+        if (storedTheme) {
+            swapTheme(storedTheme);  // Use the saved theme
+        } else {
+            var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (systemPrefersDark) {
+                swapTheme('darkMode.css');  // Default to dark mode if system prefers
+            } else {
+                swapTheme('lightMode.css');  // Default to light mode
+            }
+        }
+    }
+
+    // Event listener for button click to toggle between themes
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTheme();  // Load the saved or system theme on page load
+
+        // Add event listener for theme toggle button
+        document.getElementById('btn btn-theme').addEventListener('click', function() {
+            var currentHref = document.getElementById('mycss').getAttribute('href');
+            console.log("Current theme path: " + currentHref);  // Debugging log
+
+            if (currentHref.includes('lightMode.css')) {
+                swapTheme('darkMode.css');  // Switch to dark mode
+            } else {
+                swapTheme('lightMode.css');  // Switch to light mode
+            }
+        });
+    });
+        </script>
 
         <title>Portfolio</title>
     </head>
@@ -31,6 +110,7 @@
                         <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
                         <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
                         <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+                        <li class="nav_item"><button id="btn btn-theme" ><img src="/static/assets/img/lightbulb.png"></button></li>
                         <li class="nav__item"><button class="btn btn-light" onclick="swapStyles('lightMode.css')">Light Mode</button></li>
                         <li class="nav__item"><button class="btn btn-dark" onclick="swapStyles('darkMode.css')">Dark Mode</button></li>
                 
@@ -199,7 +279,7 @@
     
     
     
-            var cssFile = "{% static 'assets/css' %}"
+            var cssFile = "{% static 'assets/css/' %}"
             
     
             function swapStyles(sheet){
@@ -210,36 +290,7 @@
             }
     
     
-            function loadSettings(){
-                //Call data and set local storage
-    
-                var url = "{% url 'user_settings' %}"
-                fetch(url, {
-                    method:'GET',
-                    headers:{
-                        'Content-type':'application/json'
-                    }
-                })
-                .then((response) => response.json())
-                .then(function(data){
-    
-                    console.log('Data:', data)
-    
-                    var theme = data.value;
-                    
-                    if (theme == 'lightMode.css' || null){
-                        swapStyles('lightMode.css')
-                    }else if(theme == 'darkMode.css'){
-                        swapStyles('darkMode.css')
-                    }
-                    
-    
-                })
-    
-            }
             
-            loadSettings()
-    
     
             function updateTheme(theme){
                 var url = "{% url 'update_theme' %}"

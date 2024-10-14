@@ -76,3 +76,10 @@ class Setting(models.Model):
 
 	def __str__(self):
 		return self.name
+     
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    theme = models.CharField(max_length=20, default='lightMode.css')  # Default theme
+
+
