@@ -10,25 +10,14 @@ from .serializers import UserSerailizer
 def index(request):
 	return render(request, 'base/index.html')
 
-def userSettings(request):
-	user, created = User.objects.get_or_create(id=1)
-	setting = user.setting
-
-	seralizer = UserSerailizer(setting, many=False)
-
-	return JsonResponse(seralizer.data, safe=False)
-
-
-def updateTheme(request):
-	data = json.loads(request.body)
-	theme = data['theme']
-	
-	user, created = User.objects.get_or_create(id=1)
-	user.setting.value = theme
-	user.setting.save()
-	print('Request:', theme)
-	return JsonResponse('Updated..', safe=False)
-
+def update_theme(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        theme = data.get('theme')
+        print(theme)
+        request.session['theme'] = theme  # Store the theme in the session
+        return JsonResponse({'status': 'success', 'message': 'Theme updated successfully'})
+    
 def index(request):
 
     # Home
@@ -55,3 +44,11 @@ def index(request):
 
 
     return render(request, 'index.html', context)
+
+def some_view(request):
+    # Get theme from session or user profile
+    theme = request.session.get('theme', 'lightMode.css')  # Default to light mode
+    # If using user profile:
+    # theme = request.user.profile.theme if request.user.is_authenticated else 'lightMode.css'
+
+    return render(request, 'index.html', {'theme': theme})
