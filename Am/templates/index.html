@@ -36,9 +36,14 @@ var csrftoken = getCookie('csrftoken');
 
     // Function to switch the theme
     function swapTheme(theme) {
+        var text = document.getElementById("btn-theme");
         var themePath = cssFile + theme;
         console.log("Swapping theme to: " + themePath);  // Debugging log
-
+        if (themePath.includes('lightMode.css')) {
+            text.innerHTML = "☾";         
+        } else {
+            text.innerHTML = "☼";
+        }
         // Update the CSS file reference
         document.getElementById('mycss').setAttribute('href', themePath);
 
@@ -61,7 +66,7 @@ var csrftoken = getCookie('csrftoken');
     // Load theme based on user's preference or system's preference
     function loadTheme() {
         var storedTheme = localStorage.getItem('theme');
-
+                
         if (storedTheme) {
             swapTheme(storedTheme);  // Use the saved theme
         } else {
@@ -79,10 +84,9 @@ var csrftoken = getCookie('csrftoken');
         loadTheme();  // Load the saved or system theme on page load
 
         // Add event listener for theme toggle button
-        document.getElementById('btn btn-theme').addEventListener('click', function() {
+        document.getElementById('btn-theme').addEventListener('click', function() {
             var currentHref = document.getElementById('mycss').getAttribute('href');
             console.log("Current theme path: " + currentHref);  // Debugging log
-
             if (currentHref.includes('lightMode.css')) {
                 swapTheme('darkMode.css');  // Switch to dark mode
             } else {
@@ -110,10 +114,7 @@ var csrftoken = getCookie('csrftoken');
                         <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
                         <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
                         <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                        <li class="nav_item"><button id="btn btn-theme" ><img src="/static/assets/img/lightbulb.png"></button></li>
-                        <li class="nav__item"><button class="btn btn-light" onclick="swapStyles('lightMode.css')">Light Mode</button></li>
-                        <li class="nav__item"><button class="btn btn-dark" onclick="swapStyles('darkMode.css')">Dark Mode</button></li>
-                
+                        <li class="nav_item"><button id="btn-theme"><img src="/static/assets/img/lightbulb.png"> </button></li>
                     </ul>
                 </div>
 
@@ -127,7 +128,7 @@ var csrftoken = getCookie('csrftoken');
             <!--===== HOME =====-->
             <section class="home" id="home">
                 <div class="home__container bd-grid">
-                    <h1 class="home__title"><span>{{ home.greetings_1 }}</span><br>{{ home.greetings_2 }}</h1>
+                    <h1 class="home__title"><span>{{ home.greetings_1 }}</span><br><span>{{ home.greetings_2 }}</span></h1>
 
                     <div class="home__scroll">
                         <a href="#about" class="home__scroll-link"><i class='bx bx-up-arrow-alt' ></i>Scroll down</a>
@@ -149,9 +150,7 @@ var csrftoken = getCookie('csrftoken');
                     <div>
                         <h2 class="about__subtitle">{{ about.heading }}</h2>
                         <span class="about__profession">{{ about.career }}</span>
-                        <p class="about__text">{{ about.description }}</p>
-
-                            
+                        <p class="about__text">{{ about.description }}</p>                            
                         </div>
                     </div>
                 </div>
@@ -257,52 +256,5 @@ var csrftoken = getCookie('csrftoken');
 
         <!--===== MAIN JS =====-->
         <script src="{% static 'assets/js/main.js' %}"></script>
-
-        <script type="text/javascript">
-
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            var csrftoken = getCookie('csrftoken');
-    
-    
-    
-            var cssFile = "{% static 'assets/css/' %}"
-            
-    
-            function swapStyles(sheet){
-                document.getElementById('mycss').href = cssFile + '/' + sheet
-                localStorage.setItem('theme', sheet)
-    
-                updateTheme(sheet)
-            }
-    
-    
-            
-    
-            function updateTheme(theme){
-                var url = "{% url 'update_theme' %}"
-                fetch(url, {
-                    method:'POST',
-                    headers:{
-                        'Content-type':'application/json',
-                        'X-CSRFToken':csrftoken,
-                    },
-                    body:JSON.stringify({'theme':theme})
-                })
-            }
-        </script>
     </body>
 </html>
