@@ -255,13 +255,8 @@ img{
     display: block;
     margin-bottom: var(--mb-4);
 }
-.about__social-icon{
-    font-size: 1.4rem;
-    margin: 0 var(--mb-1);
-}
-.about__social-icon:hover{
-    color: var(--first-color);
-}
+
+
 
 /* ===== SKILLS =====*/
 .skills__container{
@@ -390,6 +385,23 @@ img{
 }
 .footer__social:hover{
     color: var(--first-color);
+}
+
+.footer__data h2.footer__title {
+    margin-top: 0.5rem; /* Adjust this value if more spacing is needed between sections */
+}
+
+.footer__data form button {
+    border-style: none;
+    background-color: var(--dark-color);
+    color: var(--accent-color);
+    display: block;
+    margin-left: -0.2rem;
+}
+
+.footer__data form button:hover{
+    color: var(--first-color);
+    text-decoration: underline;
 }
 
 /* ===== MEDIA QUERIES =====*/

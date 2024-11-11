@@ -21,32 +21,37 @@ function linkAction(){
 navLink.forEach(n => n.addEventListener('click', linkAction))
 
 /*===== SCROLL SECTIONS ACTIVE LINK =====*/
-const sections = document.querySelectorAll('section[id]')
+const sections = document.querySelectorAll('section[id]');
 
-window.addEventListener('scroll', scrollActive)
+window.addEventListener('scroll', scrollActive);
 
-function scrollActive(){
-    const scrollY = window.pageYOffset
+function scrollActive() {
+    const scrollY = window.pageYOffset;
 
-    sections.forEach(current =>{
-        const sectionHeight = current.offsetHeight
-        const sectionTop = current.offsetTop - 50;
-        sectionId = current.getAttribute('id')
+    sections.forEach(current => {
+        const sectionHeight = current.offsetHeight;
+        const sectionTop = current.offsetTop - window.innerHeight / 2; // Adjusted to reveal at mid-viewport
+        const sectionId = current.getAttribute('id');
 
-        if(scrollY > sectionTop && scrollY <= sectionTop + sectionHeight){
-            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.add('active')
-        }else{
-            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.remove('active')
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.add('active');
+        } else {
+            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.remove('active');
         }
-    })
+    });
 }
+
+window.addEventListener('resize', () => {
+    sr.sync(); // Recalculate reveal positions on resize
+});
+
 
 /*===== SCROLL REVEAL ANIMATION =====*/
 const sr = ScrollReveal({
-    origin: 'top',
-    distance: '80px',
-    duration: 2000,
-    reset: true
+    origin: 'top',           // Direction from which elements appear
+    distance: '80px',        // Distance they travel to reveal
+    duration: 2000,          // Duration of animation in ms
+    reset: true              // Elements reappear when scrolling up
 })
 
 /*SCROLL HOME*/
@@ -56,10 +61,30 @@ sr.reveal('.home__img', {origin:'right', delay: 400})
 
 /*SCROLL ABOUT*/
 sr.reveal('.about__img', {delay: 500})
-sr.reveal('.about__subtitle', {delay: 300})
-sr.reveal('.about__profession', {delay: 400})
-sr.reveal('.about__text', {delay: 500})
-sr.reveal('.about__social-icon', {delay: 600, interval: 200})
+sr.reveal('.about__subtitle', {
+    origin: 'bottom',
+    distance: '20px',        // Less distance so it starts revealing sooner
+    delay: 0,                // Remove delay so it appears immediately
+    duration: 800,           // Adjust duration to make reveal smoother
+    viewOffset: { top: 0, right: 0, bottom: -300, left: 0 }, // Adjust this to trigger reveal earlier
+});
+sr.reveal('.about__profession', {
+    origin: 'bottom',
+    distance: '20px',        // Less distance so it starts revealing sooner
+    delay: 0,                // Remove delay so it appears immediately
+    duration: 800,           // Adjust duration to make reveal smoother
+    viewOffset: { top: 0, right: 0, bottom: -250, left: 0 }, // Adjust this to trigger reveal earlier
+});
+/* Adjust ScrollReveal settings for About Text */
+sr.reveal('.about__text', {
+    origin: 'bottom',
+    distance: '20px',        // Less distance so it starts revealing sooner
+    delay: 0,                // Remove delay so it appears immediately
+    duration: 800,           // Adjust duration to make reveal smoother
+    viewOffset: { top: 0, right: 0, bottom: -200, left: 0 }, // Adjust this to trigger reveal earlier
+});
+
+
 
 /*SCROLL SKILLS*/
 sr.reveal('.skills__subtitle', {})
@@ -70,8 +95,7 @@ sr.reveal('.skills__img', {delay: 400})
 sr.reveal('.project__img', {interval: 200})
 
 /*SCROLL CONTACT*/
-sr.reveal('.contact__subtitle', {})
-sr.reveal('.contact__text', {interval: 200})
+sr.reveal('.contact__subtitle', {interval:200, viewOffset: { top: -200, right: 0, bottom: 0, left: 0 }})
+sr.reveal('.contact__text', {interval: 200, viewOffset: { top: -200, right: 0, bottom: 0, left: 0 }})
 sr.reveal('.contact__input', {delay: 400})
 sr.reveal('.contact__button', {delay: 600})
-
