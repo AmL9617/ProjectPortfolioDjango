@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% load i18n %}
 {% load static %}
+{% get_current_language as LANGUAGE_CODE %}
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -14,89 +16,161 @@
         <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
 
         <script>
-// Fetch CSRF token (assuming the function remains unchanged)
-var csrftoken = getCookie('csrftoken');
-    var cssFile = "{% static 'assets/css/' %}";  // Path to your CSS directory with a trailing slash
+        // Fetch CSRF token (assuming the function remains unchanged)
+        var csrftoken = getCookie('csrftoken');
+        var cssFile = "{% static 'assets/css/' %}";  // Path to your CSS directory with a trailing slash
 
-    // Function to get cookies (remains the same)
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        // Function to get cookies (remains the same)
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to switch the theme
+        function swapTheme(theme) {
+            var text = document.getElementById("btn-theme");
+            var themePath = cssFile + theme;
+            console.log("Swapping theme to: " + themePath);  // Debugging log
+            if (themePath.includes('lightMode.css')) {
+                text.innerHTML = "☾";         
+            } else {
+                text.innerHTML = "☼";
+            }
+            // Update the CSS file reference
+            document.getElementById('mycss').setAttribute('href', themePath);
+
+            // Save the theme choice to localStorage
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to update the theme on the server
+        function updateTheme(theme) {
+            fetch('/update_theme/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ theme: theme })
+            });
+        }
+
+        // Load theme based on user's preference or system's preference
+        function loadTheme() {
+            var storedTheme = localStorage.getItem('theme');
+                    
+            if (storedTheme) {
+                swapTheme(storedTheme);  // Use the saved theme
+            } else {
+                var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (systemPrefersDark) {
+                    swapTheme('darkMode.css');  // Default to dark mode if system prefers
+                } else {
+                    swapTheme('lightMode.css');  // Default to light mode
                 }
             }
         }
-        return cookieValue;
-    }
 
-    // Function to switch the theme
-    function swapTheme(theme) {
-        var text = document.getElementById("btn-theme");
-        var themePath = cssFile + theme;
-        console.log("Swapping theme to: " + themePath);  // Debugging log
-        if (themePath.includes('lightMode.css')) {
-            text.innerHTML = "☾";         
-        } else {
-            text.innerHTML = "☼";
-        }
-        // Update the CSS file reference
-        document.getElementById('mycss').setAttribute('href', themePath);
+        // Event listener for button click to toggle between themes
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();  // Load the saved or system theme on page load
+            loadLanguage();
 
-        // Save the theme choice to localStorage
-        localStorage.setItem('theme', theme);
-    }
-
-    // Function to update the theme on the server
-    function updateTheme(theme) {
-        fetch('/update_theme/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({ theme: theme })
+            // Add event listener for theme toggle button
+            document.getElementById('btn-theme').addEventListener('click', function() {
+                var currentHref = document.getElementById('mycss').getAttribute('href');
+                console.log("Current theme path: " + currentHref);  // Debugging log
+                if (currentHref.includes('lightMode.css')) {
+                    swapTheme('darkMode.css');  // Switch to dark mode
+                } else {
+                    swapTheme('lightMode.css');  // Switch to light mode
+                }
+            });
         });
-    }
 
-    // Load theme based on user's preference or system's preference
-    function loadTheme() {
-        var storedTheme = localStorage.getItem('theme');
+        function loadLanguage() {
+            var storedLanguage = localStorage.getItem('language');
+            
+            if (storedLanguage) {
+                // Use the saved language
+                setLanguage(storedLanguage, false);  // False: don't reload on first load
+            } else {
+                // Detect browser language and set it on first visit
+                var userLang = navigator.language || navigator.userLanguage;
+                userLang = userLang.substring(0, 2);  // Take first two characters (e.g., 'en')
+
+                var supportedLanguages = ['en', 'pt', 'es', 'fr'];
                 
-        if (storedTheme) {
-            swapTheme(storedTheme);  // Use the saved theme
-        } else {
-            var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (systemPrefersDark) {
-                swapTheme('darkMode.css');  // Default to dark mode if system prefers
-            } else {
-                swapTheme('lightMode.css');  // Default to light mode
+                // If browser language is supported, use it; otherwise, default to English
+                if (supportedLanguages.includes(userLang)) {
+                    setLanguage(userLang, false);  // False: no reload needed
+                } else {
+                    setLanguage('en', false);  // Default to 'en' if browser language isn't supported
+                }
             }
         }
-    }
+    
 
-    // Event listener for button click to toggle between themes
-    document.addEventListener('DOMContentLoaded', function() {
-        loadTheme();  // Load the saved or system theme on page load
+        // Function to manually switch language and reload
+        function switchLanguage(lang) {
+            setLanguage(lang, true);  // True: reload needed when switching languages manually
+        }
 
-        // Add event listener for theme toggle button
-        document.getElementById('btn-theme').addEventListener('click', function() {
-            var currentHref = document.getElementById('mycss').getAttribute('href');
-            console.log("Current theme path: " + currentHref);  // Debugging log
-            if (currentHref.includes('lightMode.css')) {
-                swapTheme('darkMode.css');  // Switch to dark mode
-            } else {
-                swapTheme('lightMode.css');  // Switch to light mode
+        // Function to set and save the language, optionally reloading the page
+        function setLanguage(lang, reload = true) {
+            localStorage.setItem('language', lang);  // Save the preferred language
+
+            // Only change the language if it's different from the current one
+            if (lang !== '{{ LANGUAGE_CODE }}') {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{% url "set_language" %}';  // Django's set_language URL
+
+                // CSRF token (this needs to be available in your HTML context)
+                var csrfToken = '{{ csrf_token }}';
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+
+                // Hidden input for the next page to load after language change
+                var nextInput = document.createElement('input');
+                nextInput.type = 'hidden';
+                nextInput.name = 'next';
+                nextInput.value = '{{ request.path }}';  // Current page path
+                form.appendChild(nextInput);
+
+                // Hidden input for the language to set
+                var langInput = document.createElement('input');
+                langInput.type = 'hidden';
+                langInput.name = 'language';
+                langInput.value = lang;
+                form.appendChild(langInput);
+
+                // Append the form and submit it
+                document.body.appendChild(form);
+
+                // Only reload if needed (when manually switching)
+                if (reload) {
+                    form.submit();  // Reload the page to change language
+                }
             }
-        });
-    });
-        </script>
+        }
+    </script>
 
-        <title>Portfolio</title>
+
+        <title>{% trans "Portfolio" %}</title>
     </head>
     <body>
         <!--===== HEADER =====-->
@@ -109,12 +183,12 @@ var csrftoken = getCookie('csrftoken');
 
                 <div class="nav__menu" id="nav-menu">
                     <ul class="nav__list">
-                        <li class="nav__item"><a href="#home" class="nav__link active">Home</a></li>
-                        <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-                        <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
-                        <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
-                        <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                        <li class="nav_item"><button id="btn-theme"><img src="/static/assets/img/lightbulb.png"> </button></li>
+                        <li class="nav__item"><a href="#home" class="nav__link active">{% trans "Home" %}</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">{% trans "About" %}</a></li>
+                        <li class="nav__item"><a href="#skills" class="nav__link">{% trans "Skills" %}</a></li>
+                        <li class="nav__item"><a href="#projects" class="nav__link">{% trans "Projects" %}</a></li>
+                        <li class="nav__item"><a href="#contact" class="nav__link">{% trans "Contact" %}</a></li>
+                        <li class="nav_item"><button id="btn-theme"></button></li>
                     </ul>
                 </div>
 
@@ -131,7 +205,7 @@ var csrftoken = getCookie('csrftoken');
                     <h1 class="home__title"><span>{{ home.greetings_1 }}</span><br><span>{{ home.greetings_2 }}</span></h1>
 
                     <div class="home__scroll">
-                        <a href="#about" class="home__scroll-link"><i class='bx bx-up-arrow-alt' ></i>Scroll down</a>
+                        <a href="#about" class="home__scroll-link"><i class='bx bx-up-arrow-alt' ></i>{% trans "Scroll down" %}</a>
                     </div>
 
                     <img src="{{ home.picture.url }}" alt="" class="home__img">
@@ -140,8 +214,7 @@ var csrftoken = getCookie('csrftoken');
             
             <!--===== ABOUT =====-->
             <section class="about section" id="about">
-                <h2 class="section-title">About</h2>
-
+                <h2 class="section-title">{% trans "About" %}</h2>
                 <div class="about__container bd-grid">
                     <div class="about__img">
                         <img src="{{ about.profile_img.url }}" alt="">
@@ -158,7 +231,7 @@ var csrftoken = getCookie('csrftoken');
 
             <!--===== SKILLS =====-->
             <section class="skills section" id="skills">
-                <h2 class="section-title">Skills</h2>
+                <h2 class="section-title">{% trans "Skills" %}</h2>
 
                 <div class="skills__container bd-grid">
                     <div class="skills__box">
@@ -180,7 +253,7 @@ var csrftoken = getCookie('csrftoken');
 
             <!--===== Projects =====-->
             <section class="project section" id="project">
-                <h2 class="section-title">Projects</h2>
+                <h2 class="section-title">{% trans "Projects" %}</h2>
 
                 
                 <div class="project__container bd-grid">
@@ -203,51 +276,70 @@ var csrftoken = getCookie('csrftoken');
 
             <!--===== CONTACT =====-->
             <section class="contact section" id="contact">
-                <h2 class="section-title">Contact</h2>
+                <h2 class="section-title">{% trans "Contact" %}</h2>
 
                 <div class="contact__container bd-grid">
                     <div class="contact__info">
-                        <h3 class="contact__subtitle">EMAIL</h3>
+                        <h3 class="contact__subtitle">{% trans "EMAIL" %}</h3>
                         <span class="contact__text">amanda96laurindo@outlook.com</span>
                     </div>
 
                     <div class="contact__info">
 
-                        <h3 class="contact__subtitle">PHONE</h3>
+                        <h3 class="contact__subtitle">{% trans "PHONE" %}</h3>
                         <span class="contact__text">+55 45 99124-3946</span>
 
                     </div> 
                 </div>
             </section>
         </main>
-
         <!--===== FOOTER =====-->
         <footer class="footer section">
             <div class="footer__container bd-grid">
                 <div class="footer__data">
                     <h2 class="footer__title">Amanda de Oliveira Laurindo</h2>
-                    <p class="footer__text">I'm Amanda and this is my portfolio, which was made by following the tutorial from Academy Omen.</p>
+                    <p class="footer__text">{% trans "I'm Amanda and this is my portfolio, which was made by following the tutorial from Academy Omen." %}</p>
                     <a href="https://github.com/Academy-Omen/django-portfolio/tree/main" class="footer__link">https://github.com/Academy-Omen/django-portfolio/tree/main</a>
                 </div>
 
                 <div class="footer__data">
-                    <h2 class="footer__title">EXPLORE</h2>
+                    <h2 class="footer__title">{% trans "EXPLORE" %}</h2>
                     <ul>
-                        <li><a href="#home" class="footer__link">Home</a></li>
-                        <li><a href="#about" class="footer__link">About</a></li>
-                        <li><a href="#skills" class="footer__link">Skills</a></li>
-                        <li><a href="#projects" class="footer__link">Projects</a></li>
-                        <li><a href="#Contact" class="footer__link">Contact</a></li>
+                        <li><a href="#home" class="footer__link">{% trans "Home" %}</a></li>
+                        <li><a href="#about" class="footer__link">{% trans "About" %}</a></li>
+                        <li><a href="#skills" class="footer__link">{% trans "Skills" %}</a></li>
+                        <li><a href="#projects" class="footer__link">{% trans "Projects" %}</a></li>
+                        <li><a href="#Contact" class="footer__link">{% trans "Contact" %}</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer__data">
-                    <h2 class="footer__title">SOCIAL MEDIAS</h2>
+                    <h2 class="footer__title">{% trans "SOCIAL MEDIAS" %}</h2>
                     <a href="https://www.instagram.com/amanda_l04/" class="footer__social"><i class='bx bxl-instagram' ></i></a>
                     <a href="https://github.com/AmL9617" class="footer__social"><i class='bx bxl-github' ></i></a>
+                
+                    <h2 class="footer__title">{% trans "LANGUAGES" %}</h2>
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        
+                        {% if LANGUAGE_CODE != 'pt' %}
+                        <button type="submit" name="language" value="pt">{% trans "Portuguese" %}</button>
+                        {% endif %}
+                        
+                        {% if LANGUAGE_CODE != 'es' %}
+                        <button type="submit" name="language" value="es">{% trans "Spanish" %}</button>
+                        {% endif %}
+                        
+                        {% if LANGUAGE_CODE != 'fr' %}
+                        <button type="submit" name="language" value="fr">{% trans "French" %}</button>
+                        {% endif %}
+                        
+                        {% if LANGUAGE_CODE != 'en' %}
+                        <button type="submit" name="language" value="en">{% trans "English" %}</button>
+                        {% endif %}
+                    </form>
                 </div>
-
-
             </div>
         </footer>
 

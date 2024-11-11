@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from .models import Home, About, Profile, Category, Skills, Project
 import json
+from django.utils.translation import gettext 
 
 # Create your views here.
 

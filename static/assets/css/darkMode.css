@@ -391,6 +391,22 @@ img{
     color: var(--dark-color);
 }
 
+.footer__data h2.footer__title {
+    margin-top: 0.5rem; /* Adjust this value if more spacing is needed between sections */
+}
+
+.footer__data form button {
+    border-style: none;
+    background-color: var(--first-color);
+    color: rgba(1,112,232,255);
+    display: block;
+    margin-left: -0.2rem;
+}
+.footer__data form button:hover{
+    color: var(--dark-color);
+    text-decoration: underline;
+}
+
 /* ===== MEDIA QUERIES =====*/
 /* For small devices */
 @media screen and (max-width: 320px) {

@@ -1,16 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
 # HOME SECTION
 
 class Home(models.Model):
-    name = models.CharField(max_length=20)
-    greetings_1 = models.CharField(max_length=5)
-    greetings_2 = models.CharField(max_length=5)
+    name = models.CharField(max_length=20,  verbose_name=_("Name"))
+    greetings_1 = models.CharField(max_length=9,  verbose_name=_("Greetings 1"))
+    greetings_2 = models.CharField(max_length=9,  verbose_name=_("Greetings 2"))
     picture = models.ImageField(upload_to='picture/')
-    # save time when modified
+    
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -20,9 +21,9 @@ class Home(models.Model):
 # ABOUT SECTION
 
 class About(models.Model):
-    heading = models.CharField(max_length=50)
-    career = models.CharField(max_length=20)
-    description = models.TextField(blank=False)
+    heading = models.CharField(max_length=50,  verbose_name=_("Heading"))
+    career = models.CharField(max_length=20,  verbose_name=_("Career"))
+    description = models.TextField(blank=False,  verbose_name=_("Description"))
     profile_img = models.ImageField(upload_to='profile/')    
     updated = models.DateTimeField(auto_now=True)
 
@@ -39,21 +40,21 @@ class Profile(models.Model):
 # SKILLS SECTION
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20,  verbose_name=_("Name Category"))
 
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Skill'
-        verbose_name_plural = 'Skills'
+        verbose_name = _('Skill')
+        verbose_name_plural = _('Skills')
 
     def __str__(self):
         return self.name
 
 class Skills(models.Model):
     category = models.ForeignKey(Category,
-                                on_delete=models.CASCADE)
-    skill_name = models.CharField(max_length=20)
+                                on_delete=models.CASCADE,  verbose_name=_("Category"))
+    skill_name = models.CharField(max_length=20,  verbose_name=_("Skill"))
 
     
 
