@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Am',
     'rest_framework',
-    'modeltranslation',
+    'parler',
 ]
 
 MIDDLEWARE = [
@@ -109,13 +109,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 LANGUAGES = [
     ('en', 'English'),
     ('pt', 'Brazilian Portuguese'),
-    ('fr', 'French'),
+    #('fr', 'French'),
     ('es', 'Spanish')
 ]
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'pt'},
+        #{'code': 'fr'},
+        {'code': 'es'}
+    ),
+    'default': {
+        'fallbacks': ['en'],
+        'hide_untranslated': False,
+    }
+}
 
 USE_I18N = True
 USE_L10N = True
@@ -134,6 +147,8 @@ LOCALE_PATHS = [
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+APPEND_SLASH = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root/')

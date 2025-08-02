@@ -71,7 +71,7 @@ msgstr "Inicio"
 #: .\Am\templates\index.html:187 .\Am\templates\index.html:217
 #: .\Am\templates\index.html:309
 msgid "About"
-msgstr "Detalles Mios"
+msgstr "Mis Detalles"
 
 #: .\Am\templates\index.html:189 .\Am\templates\index.html:256
 #: .\Am\templates\index.html:311

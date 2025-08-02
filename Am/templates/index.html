@@ -109,7 +109,7 @@
                 var userLang = navigator.language || navigator.userLanguage;
                 userLang = userLang.substring(0, 2);  // Take first two characters (e.g., 'en')
 
-                var supportedLanguages = ['en', 'pt', 'es', 'fr'];
+                var supportedLanguages = ['en', 'pt', 'es'];
                 
                 // If browser language is supported, use it; otherwise, default to English
                 if (supportedLanguages.includes(userLang)) {
@@ -208,7 +208,7 @@
                         <a href="#about" class="home__scroll-link"><i class='bx bx-up-arrow-alt' ></i>{% trans "Scroll down" %}</a>
                     </div>
 
-                    <img src="{{ home.picture.url }}" alt="" class="home__img">
+                    <!--<img src="{{ home.picture.url }}" alt="" class="home__img">-->
                 </div>
             </section>
             
@@ -216,9 +216,9 @@
             <section class="about section" id="about">
                 <h2 class="section-title">{% trans "About" %}</h2>
                 <div class="about__container bd-grid">
-                    <div class="about__img">
+                    <!--<div class="about__img">
                         <img src="{{ about.profile_img.url }}" alt="">
-                    </div>
+                    </div>-->
 
                     <div>
                         <h2 class="about__subtitle">{{ about.heading }}</h2>
@@ -330,11 +330,11 @@
                         {% if LANGUAGE_CODE != 'es' %}
                         <button type="submit" name="language" value="es">{% trans "Spanish" %}</button>
                         {% endif %}
-                        
+                        <!--
                         {% if LANGUAGE_CODE != 'fr' %}
                         <button type="submit" name="language" value="fr">{% trans "French" %}</button>
                         {% endif %}
-                        
+                        -->
                         {% if LANGUAGE_CODE != 'en' %}
                         <button type="submit" name="language" value="en">{% trans "English" %}</button>
                         {% endif %}

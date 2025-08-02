@@ -66,14 +66,14 @@ sr.reveal('.about__subtitle', {
     distance: '20px',        // Less distance so it starts revealing sooner
     delay: 0,                // Remove delay so it appears immediately
     duration: 800,           // Adjust duration to make reveal smoother
-    viewOffset: { top: 0, right: 0, bottom: -300, left: 0 }, // Adjust this to trigger reveal earlier
+    viewOffset: { top: 300, bottom: 0 }, // Adjust this to trigger reveal earlier
 });
 sr.reveal('.about__profession', {
     origin: 'bottom',
     distance: '20px',        // Less distance so it starts revealing sooner
     delay: 0,                // Remove delay so it appears immediately
     duration: 800,           // Adjust duration to make reveal smoother
-    viewOffset: { top: 0, right: 0, bottom: -250, left: 0 }, // Adjust this to trigger reveal earlier
+    viewOffset: { top: 300, bottom: 0 }, // Adjust this to trigger reveal earlier
 });
 /* Adjust ScrollReveal settings for About Text */
 sr.reveal('.about__text', {
@@ -81,7 +81,7 @@ sr.reveal('.about__text', {
     distance: '20px',        // Less distance so it starts revealing sooner
     delay: 0,                // Remove delay so it appears immediately
     duration: 800,           // Adjust duration to make reveal smoother
-    viewOffset: { top: 0, right: 0, bottom: -200, left: 0 }, // Adjust this to trigger reveal earlier
+    viewOffset: { top: 300, bottom: 0 }, // Adjust this to trigger reveal earlier
 });
 
 
